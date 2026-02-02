@@ -17,7 +17,7 @@ new class extends Component {
 
         foreach ($this->files as $file) {
             $originalName = $file->getClientOriginalName();
-            $path = $file->storeAs('uploads', $originalName, 'public');
+            $path = $file->StoreAs('vt-uploads', $originalName, 's3');
 
             MyFiles::create([
                 'name' => $originalName,

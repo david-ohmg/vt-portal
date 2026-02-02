@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Mail\PortalMail;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -9,6 +10,7 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/portal/profile', 'pages::portal.⚡profile')->name('portal.profile');
     Route::livewire('/portal/files', 'pages::portal.⚡files')->name('portal.files');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/test/mail', fn () => (new PortalMail(['message' => 'This is a test message']))->build());
 });
 
 Route::get('/', fn () => view('login'))->name('login');

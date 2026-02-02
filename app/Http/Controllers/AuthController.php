@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -10,21 +11,20 @@ class AuthController extends Controller
         return view('login');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request, $remember = false) {
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        auth()->attempt($validated);
-        if (!auth()->check()) {
-            return back()->with('error', 'Invalid Credentials');
+
+        if(Auth::attempt($validated, $remember)) {
+            return redirect()->intended('/portal/batches/');
         }
-        return redirect()->route('portal.batches')
-            ->with('success', 'Logged in successfully');
+        return redirect()->back()->with(['error', 'Invalid credentials.']);
     }
 
     public function logout() {
-        auth()->logout();
+        Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
         return redirect()->route('login');

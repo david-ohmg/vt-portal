@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -13,52 +14,33 @@ class PortalMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(
+        public readonly array $data
+    ) {}
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Portal Mail',
+            replyTo: [new Address('vt@onholdwizard.com', 'VT Portal')],
+            subject: $this->data['subject'],
+        // Optional: set a from address here, otherwise MAIL_FROM_* is used.
+        // from: new Address('no-reply@example.com', 'VT Portal'),
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
             view: 'emails.test',
+            with: [
+                'heading' => $this->data['subject'],
+                'test_message' => $this->data['message'],
+            ],
         );
-    }
-
-    /**
-     * Build the message.
-     */
-    public function build()
-    {
-        $address = 'david@onholdwizard.com';
-        $subject = 'This is a demo!';
-        $name = 'Jane Doe';
-
-        return $this->view('emails.test')
-            ->from($address, $name)
-//            ->cc($address, $name)
-//            ->bcc($address, $name)
-            ->replyTo('vt@onholdwizard.com', 'OHMG VT Portal')
-            ->subject($subject)
-            ->with([ 'test_message' => $this->data['message'] ]);
     }
 
 

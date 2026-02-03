@@ -15,7 +15,7 @@
 <div class="flex flex-col items-center gap-4 mt-4">
     <h1 class="text-2xl font-bold text-center mb-4 mt-4">OHMG VT Portal</h1>
     @if(session('error'))
-        <div class="mx-8 my-8  border-l-4 border-red-500 bg-red-100 p-4 text-red-700 opacity-75">{{ session('error') }}</div>
+        <div class="mx-8 my-8 border-l-4 border-red-500 bg-red-100 p-4 text-red-700 opacity-75">{{ session('error') }}</div>
     @endif
     <form action="{{ route('login.post') }}" method="post">
         @csrf

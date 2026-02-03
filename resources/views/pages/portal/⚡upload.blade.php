@@ -4,6 +4,7 @@ use App\Models\MyFiles;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Log;
 
 new class extends Component {
     use WithFileUploads;
@@ -17,15 +18,28 @@ new class extends Component {
 
         foreach ($this->files as $file) {
             $originalName = $file->getClientOriginalName();
-            $path = $file->StoreAs('vt-uploads', $originalName, 's3');
+            try {
+                $path = $file->storeAs('vt-uploads', $originalName, 'public');
 
-            MyFiles::create([
-                'name' => $originalName,
-                'user_id' => auth()->user()->id,
-                'size' => $file->getSize(),
-                'path' => $path,
-                'mime_type' => $file->getClientMimeType(),
-            ]);
+                // sanity check: confirm it exists on s3
+//                $exists = Storage::disk('public')->exists($path);
+//                Log::info('S3 upload result', ['path' => $path, 'exists' => $exists]);
+
+                MyFiles::create([
+                    'name' => $originalName,
+                    'user_id' => auth()->id(),
+                    'size' => $file->getSize(),
+                    'path' => $path,
+                    'mime_type' => $file->getClientMimeType(),
+                ]);
+            } catch (\Throwable $e) {
+                Log::error('S3 upload failed', [
+                    'message' => $e->getMessage(),
+                    'file' => $originalName,
+                ]);
+
+                throw $e; // so you see the real error in dev
+            }
 
         }
 
@@ -46,7 +60,7 @@ new class extends Component {
             {{ session('message') }}
         </div>
     @endif
-    <form wire:submit.prevent="save">
+    <form wire:submit="save">
         <div class="flex justify-center">
             <div>
                 <div>

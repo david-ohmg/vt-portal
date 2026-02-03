@@ -20,13 +20,13 @@ class AuthController extends Controller
         if(Auth::attempt($validated, $remember)) {
             return redirect()->intended('/portal/batches/');
         }
-        return redirect()->back()->with(['error', 'Invalid credentials.']);
+        return redirect()->back()->with('error', 'Invalid credentials.');
     }
 
     public function logout() {
         Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Logged out successfully.');
     }
 }

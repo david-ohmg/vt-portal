@@ -14,29 +14,23 @@ new class extends Component {
 
 <div>
     <h1 class="text-2xl mt-4 mb-4 font-bold text-center">My Files</h1>
-    <div class="w-full justify-center mx-auto px-4">
-        <table class="table-auto w-full text-left whitespace-no-wrap">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Created At</th>
-                    <th>Size</th>
-                    <th>MIME Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($files as $file)
-                    <tr>
-                        <td class="mr-4">{{ $file->name }}</td>
-                        <td class="text-gray-400">{{ $file->created_at }}</td>
-                        <td class="text-gray-400">{{ $file->size }}</td>
-                        <td class="text-gray-400">{{ $file->mime_type }}</td>
-                    </tr>
-                @empty
-                    <td class="colspan-4">No files yet</td>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="px-8">
+        <div class="flex gap-4 justify-center">
+            <div class="flex-1 flex-col">Name</div>
+            <div class="flex-1 flex-col">Created At</div>
+            <div class="flex-1 flex-col">Size</div>
+            <div class="flex-1 flex-col">MIME Type</div>
+        </div>
 
+        @forelse ($files as $file)
+            <div class="flex gap-4 justify-center">
+                <div class="mr-4 flex-1 flex-col">{{ $file->name }}</div>
+                <div class="text-gray-400 flex-1 flex-col">{{ $file->created_at }}</div>
+                <div class="text-gray-400 flex-1 flex-col">{{ $file->size }}</div>
+                <div class="text-gray-400 flex-1 flex-col">{{ $file->mime_type }}</div>
+            </div>
+        @empty
+            <div class="colspan-4">No files yet</div>
+        @endforelse
     </div>
 </div>

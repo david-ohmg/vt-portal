@@ -64,11 +64,11 @@ new class extends Component {
         <div class="flex justify-center">
             <div>
                 <div>
-                    <input type="file" name="file" class="border border-dashed p-16" wire:model="files" multiple>
+                    <input type="file" name="file" class="rounded-md border border-dashed p-16" wire:model="files" multiple>
                     @error('file') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-2 flex justify-end">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4">Upload
+                    <button type="submit" class="rounded-md bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4">Upload
                     </button>
                 </div>
             </div>

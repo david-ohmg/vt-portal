@@ -10,7 +10,7 @@
 
     @livewireStyles
 </head>
-<body class="bg-slate-100 text-shadow-black">
+<body class="bg-white text-shadow-black">
 
 <div class="flex flex-col items-center gap-4 mt-4">
     <h1 class="text-2xl font-bold text-center mb-4 mt-4">OHMG VT Portal</h1>

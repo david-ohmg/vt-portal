@@ -64,7 +64,7 @@ new class extends Component {
         <div class="flex justify-center">
             <div>
                 <div>
-                    <input type="file" name="file" class="border border-dashed p-4" wire:model="files" multiple>
+                    <input type="file" name="file" class="border border-dashed p-16" wire:model="files" multiple>
                     @error('file') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-2 flex justify-end">

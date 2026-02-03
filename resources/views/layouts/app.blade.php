@@ -10,7 +10,7 @@
 
         @livewireStyles
     </head>
-    <body class="bg-slate-100 text-shadow-black">
+    <body class="bg-slate-50 text-shadow-black">
     <nav class="flex justify-between mb-2 px-4 py-2 text-gray-100 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700">
         <ul class="flex gap-8">
             <li class="font-bold">OHMG Voice Talent Portal</li>

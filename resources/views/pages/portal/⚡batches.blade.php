@@ -11,8 +11,8 @@ new class extends Component {
     }
 
     public function render() {
-//        $myUrl = 'https://test.onholdmediagroup.com/api/batches/batches/';
-        $myUrl = 'http://localhost:8888/api/batches/batches/';
+        $myUrl = 'https://test.onholdmediagroup.com/api/batches/batches/';
+//        $myUrl = 'http://localhost:8888/api/batches/batches/';
 
         $response = Http::withToken(config('services.ohmg.token'), 'Token')->get($myUrl);
 

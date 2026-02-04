@@ -8,8 +8,8 @@ new class extends Component
 
     public function render()
     {
-//        $myUrl = 'https://test.onholdmediagroup.com/api/aa-tracking/scripts/' . $this->id;
-        $myUrl = 'http://localhost:8888/api/aa-tracking/scripts/' . $this->id;
+        $myUrl = 'https://test.onholdmediagroup.com/api/aa-tracking/scripts/' . $this->id;
+//        $myUrl = 'http://localhost:8888/api/aa-tracking/scripts/' . $this->id;
         $token = config('services.ohmg.token');
 
         $response = Http::withToken($token, 'Token')->get($myUrl);

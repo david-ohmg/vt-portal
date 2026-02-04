@@ -16,3 +16,4 @@ Route::middleware('auth')->group(function () {
 Route::get('/', fn () => view('login'))->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
+Route::fallback(fn () => redirect()->route('login'));

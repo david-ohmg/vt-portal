@@ -50,7 +50,7 @@ new class extends Component {
 
         <div class="list px-4 w-full">
             @forelse($aa_batches as $aa)
-                <div class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-slate-100 border border-gray-300 px-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer" wire:click="toggle({{ $aa['id'] }})">
+                <div class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-slate-100 border border-gray-300 px-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer" wire:click="aa_toggle({{ $aa['id'] }})">
                     <div class="flex-1">
                         <span class="text-xs text-gray-700">{{ $aa['id'] }}</span>
                     </div>
@@ -105,11 +105,11 @@ new class extends Component {
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
                             @if($batch['priority'] === 1)
-                                <span class="p-2 rounded-md m-2 text-xs bg-green-400 text-white">
+                                <span class="p-2 rounded-md m-2 text-xs bg-green-400 text-white font-bold">
                             @elseif($batch['priority'] === 2)
-                                <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white">
+                                <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white font-bold">
                             @else
-                                <span class="p-2 rounded-md m-2 text-xs bg-blue-400 text-white">
+                                <span class="p-2 rounded-md m-2 text-xs bg-blue-400 text-white font-bold">
                             @endif
                                 {{ $batch['priority_string'] }}
                             </span>

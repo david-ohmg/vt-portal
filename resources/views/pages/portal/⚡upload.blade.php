@@ -1,16 +1,31 @@
 <?php
 
 use App\Models\MyFiles;
+use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Log;
 
-new class extends Component {
+new #[Title('Upload Files')]
+class extends Component {
     use WithFileUploads;
 
     #[Validate('max:4096')] // 4MB Max
     public array $files = [];
+
+    #[Url(as: 'batch_id')]
+    public string $batchId;
+
+    public function batch_route()
+    {
+        $batch_id = (int)str_replace(['aa-', 's-'], '', $this->batchId);
+        if (str_contains($this->batchId, 's-'))
+            return ['type' => 's', 'batch_id' => $batch_id];
+        else
+            return ['type' => 'aa', 'batch_id' => $batch_id];
+    }
 
     public function save()
     {
@@ -18,8 +33,17 @@ new class extends Component {
 
         foreach ($this->files as $file) {
             $originalName = $file->getClientOriginalName();
+            $batchRoute = $this->batch_route();
+
             try {
-                $path = $file->storeAs('vt-uploads', $originalName, 'public');
+
+                if ($batchRoute['type'] === 's') {
+                    $subPath = 'voice-files';
+                } else {
+                    $subPath = 'aa-files/' . $batchRoute['batch_id'];
+                }
+
+                $path = $file->storeAs($subPath, $originalName, 'public');
 
                 // sanity check: confirm it exists on s3
 //                $exists = Storage::disk('public')->exists($path);
@@ -31,9 +55,10 @@ new class extends Component {
                     'size' => $file->getSize(),
                     'path' => $path,
                     'mime_type' => $file->getClientMimeType(),
+                    'batch_id' => $this->batchId
                 ]);
-            } catch (\Throwable $e) {
-                Log::error('S3 upload failed', [
+            } catch (Throwable $e) {
+                Log::error('Upload failed', [
                     'message' => $e->getMessage(),
                     'file' => $originalName,
                 ]);
@@ -48,7 +73,7 @@ new class extends Component {
 
     public function render()
     {
-        return view('pages.portal.⚡upload', ['files' => $this->files]);
+        return view('pages.portal.⚡upload', ['files' => $this->files, 'batchId' => $this->batchId]);
     }
 };
 ?>
@@ -64,11 +89,13 @@ new class extends Component {
         <div class="flex justify-center">
             <div>
                 <div>
-                    <input type="file" name="file" class="rounded-md border border-dashed p-16 bg-slate-50" wire:model="files" multiple>
+                    <input type="file" name="file" class="rounded-md border border-dashed p-16 bg-slate-50"
+                           wire:model="files" multiple>
                     @error('file') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-2 flex justify-end">
-                    <button type="submit" class="rounded-md bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4">Upload
+                    <button type="submit"
+                            class="rounded-md bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4">Upload
                     </button>
                 </div>
             </div>

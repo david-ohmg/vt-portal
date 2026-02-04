@@ -21,6 +21,7 @@ new class extends Component
 ?>
 
 <div>
+
     <ul class="flex flex-col gap-2 mb-4 rounded-md text-sm bg-slate-200 text-gray-700 border border-gray-300 py-2 px-4">
         @foreach($data as $datum)
             <li>{{ $datum['label'] }}</li>

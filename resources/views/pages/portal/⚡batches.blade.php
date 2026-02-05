@@ -23,10 +23,9 @@ class extends Component {
     public function get_batches(?int $user_id)
     {
         if ($user_id and $user_id > 0) {
-            $myUrl = 'https://test.onholdmediagroup.com/api/batches/batches/?female_vt='.$user_id;
+            $myUrl = config('services.ohmg.url') . 'batches/batches/?female_vt='.$user_id;
         } else {
-            $myUrl = 'https://test.onholdmediagroup.com/api/batches/batches/';
-//        $myUrl = 'http://localhost:8888/api/batches/batches/';
+            $myUrl = config('services.ohmg.url') . 'batches/batches/';
         }
 
         $response = Http::withToken(config('services.ohmg.token'), 'Token')->get($myUrl);
@@ -37,11 +36,9 @@ class extends Component {
     public function get_aa_batches(?int $user_id)
     {
         if ($user_id and $user_id > 0) {
-            $myUrl = 'https://test.onholdmediagroup.com/api/aa-tracking/aa-tracking/?voice_talent_id='.$user_id;
-//            $myUrl = 'http://localhost:8888/api/aa-tracking/aa-tracking/?voice_talent_id='.$user_id;
+            $myUrl = config('services.ohmg.url') . 'aa-tracking/aa-tracking/?voice_talent_id='.$user_id;
         } else {
-            $myUrl = 'https://test.onholdmediagroup.com/api/aa-tracking/aa-tracking/';
-//        $myUrl = 'http://localhost:8888/api/aa-tracking/aa-tracking/';
+            $myUrl = config('services.ohmg.url') . 'aa-tracking/aa-tracking/';
         }
 
         $response = Http::withToken(config('services.ohmg.token'), 'Token')->get($myUrl);
@@ -81,15 +78,25 @@ class extends Component {
                     </div>
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
-                            <a href="{{ route('portal.upload', ['batch_id' => 'aa-'.$aa['id']]) }}"
-                               class="hover:text-blue-400 dark:hover:text-blue-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
-                                </svg>
-                            </a>
-                            <a href="{{ route('portal.files', ['batch_id' => 'aa-'.$aa['id']]) }}" title="My Files"
+                            @if( $aa['n_scripts'] > 0 )
+                                <a href="{{ route('portal.upload', ['batch_id' => 'aa-'.$aa['id']]) }}"
+                                   class="hover:text-blue-400 dark:hover:text-blue-300" title="Upload files for this batch">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
+                                    </svg>
+                                </a>
+                            @else
+                                <span title="Upload unavailable">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
+                                    </svg>
+                                </span>
+                            @endif
+                            <a href="{{ route('portal.files', ['batch_id' => 'aa-'.$aa['id']]) }}" title="My Files for {{ 'aa-'.$aa['id'] }}"
                                class="hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -163,14 +170,21 @@ class extends Component {
                     </div>
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
+                            @if( $batch['n_scripts'] > 0 )
                             <a href="{{ route('portal.upload', ['batch_id' => 's-'.$batch['id']]) }}"
                                title="Upload files for this batch" class="hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
                                 </svg>
                             </a>
+                            @else
+                                <span title="Upload unavailable">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
+                                    </svg>
+                                </span>
+                            @endif
                             <a href="{{ route('portal.files', ['batch_id' => 's-'.$batch['id']]) }}"
                                title="My Files for batch {{ $batch['id'] }}" class="hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

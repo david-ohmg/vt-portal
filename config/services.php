@@ -35,6 +35,7 @@ return [
         ],
     ],
     'ohmg' => [
+        'url' => env('OHMG_API_URL'),
         'token' => env('OHMG_AUTH_TOKEN'),
     ],
 

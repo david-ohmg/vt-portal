@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\PortalMail;
 use App\Models\MyFiles;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
@@ -18,28 +19,43 @@ class extends Component {
     #[Url(as: 'batch_id')]
     public string $batchId;
 
-    public function batch_route()
+    public function batchRoute(): array
     {
         $batch_id = (int)str_replace(['aa-', 's-'], '', $this->batchId);
-        if (str_contains($this->batchId, 's-'))
-            return ['type' => 's', 'batch_id' => $batch_id];
-        else
-            return ['type' => 'aa', 'batch_id' => $batch_id];
+        $label = str_contains($this->batchId, 's-') ? 's' : 'aa';
+        return ['type' => $label, 'batch_id' => $batch_id];
+    }
+
+    public function batchDetail()
+    {
+        $batchRoute = $this->batchRoute();
+        $url = config('services.ohmg.url') . 'batches/batches/' . $batchRoute['batch_id'];
+        $token = config('services.ohmg.token');
+        $response = Http::withToken($token, 'Token')->get($myUrl);
+        return $response->json();
+    }
+
+    public function sendMail($email, $body): void
+    {
+        Mail::to($email)->send(new PortalMail(
+            ['subject' => 'Files Uploaded for ' . $this->batchId, 'message' => $body]
+        ));
     }
 
     public function save()
     {
         $this->validate();
-
+        $body = '';
         foreach ($this->files as $file) {
             $originalName = $file->getClientOriginalName();
-            $batchRoute = $this->batch_route();
+            $batchRoute = $this->batchRoute();
 
             Log::info('Uploading file', [
                 'original' => $file->getClientOriginalName(),
                 'size' => $file->getSize(),
                 'mime' => $file->getClientMimeType(),
             ]);
+
 
             try {
 
@@ -51,6 +67,9 @@ class extends Component {
 
                 $path = $file->storeAs($subPath, $originalName, 'public');
 //                $path = $file->storeAs($subPath, $originalName, 's3');
+
+                // append the body of the email
+                $body += $originalName . ' - ' . $path;
 
                 // sanity check: confirm it exists on disk
                 $exists = Storage::disk('public')->exists($path);
@@ -66,6 +85,7 @@ class extends Component {
                     throw new RuntimeException("File upload returned path but object not found: {$path}");
                 }
 
+                // create MyFiles model
                 MyFiles::create([
                     'name' => $originalName,
                     'user_id' => auth()->id(),
@@ -74,6 +94,8 @@ class extends Component {
                     'mime_type' => $file->getClientMimeType(),
                     'batch_id' => $this->batchId
                 ]);
+
+
             } catch (Throwable $e) {
                 Log::error('Upload failed', [
                     'message' => $e->getMessage(),
@@ -84,6 +106,10 @@ class extends Component {
             }
 
         }
+
+        // get batch detail and send email for processed files
+        $data = $this->batchDetail();
+        $this->sendMail($data['writer_details'], $body);
 
         session()->flash('message', 'Files uploaded successfully!');
     }
@@ -106,7 +132,9 @@ class extends Component {
         <div class="flex justify-center">
             <div>
                 <div>
-                    <input type="file" name="file" class="rounded-md border border-dashed p-16 bg-slate-50 dark:bg-slate-700" wire:model="files" multiple>
+                    <input type="file" name="file"
+                           class="rounded-md border border-dashed p-16 bg-slate-50 dark:bg-slate-700" wire:model="files"
+                           multiple>
                     @error('file') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-2 flex justify-end">

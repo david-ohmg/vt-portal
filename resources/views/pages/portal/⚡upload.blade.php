@@ -29,13 +29,16 @@ class extends Component {
     public function batchDetail()
     {
         $batchRoute = $this->batchRoute();
-        $url = config('services.ohmg.url') . 'batches/batches/' . $batchRoute['batch_id'];
+        if($batchRoute['type'] === 's')
+            $url = config('services.ohmg.url') . 'batches/batches/' . $batchRoute['batch_id'];
+        else
+            $url = config('services.ohmg.url') . 'aa-tracking/aa-tracking/' . $batchRoute['batch_id'];
         $token = config('services.ohmg.token');
-        $response = Http::withToken($token, 'Token')->get($myUrl);
+        $response = Http::withToken($token, 'Token')->get($url);
         return $response->json();
     }
 
-    public function sendMail($email, $body): void
+    public function sendMail($email, $body)
     {
         Mail::to($email)->send(new PortalMail(
             ['subject' => 'Files Uploaded for ' . $this->batchId, 'message' => $body]
@@ -56,7 +59,6 @@ class extends Component {
                 'mime' => $file->getClientMimeType(),
             ]);
 
-
             try {
 
                 if ($batchRoute['type'] === 's') {
@@ -69,7 +71,7 @@ class extends Component {
 //                $path = $file->storeAs($subPath, $originalName, 's3');
 
                 // append the body of the email
-                $body += $originalName . ' - ' . $path;
+                $body .= '<p>'.$path.'</p>';
 
                 // sanity check: confirm it exists on disk
                 $exists = Storage::disk('public')->exists($path);
@@ -109,7 +111,8 @@ class extends Component {
 
         // get batch detail and send email for processed files
         $data = $this->batchDetail();
-        $this->sendMail($data['writer_details'], $body);
+        $email = $data['writer_details'];
+        $this->sendMail($email, $body);
 
         session()->flash('message', 'Files uploaded successfully!');
     }

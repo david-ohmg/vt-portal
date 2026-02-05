@@ -6,6 +6,6 @@
 </head>
 <body>
 <h2>{{ $heading }}</h2>
-<p>{{ $test_message }}</p>
+<p>{{!! $test_message !!}}</p>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -19,11 +20,10 @@ class extends Component {
         $this->aaId = $this->aaId === $id ? null : $id;
     }
 
-    public function get_batches()
+    public function get_batches(?int $user_id)
     {
-        if (request()->cookie('ohmg-vt-id') and (int)request()->cookie('ohmg-vt-id') > 0) {
-            $myUrl = 'https://test.onholdmediagroup.com/api/batches/batches/?vt=' . (int)request()->cookie('ohmg-vt-id');
-
+        if ($user_id and $user_id > 0) {
+            $myUrl = 'https://test.onholdmediagroup.com/api/batches/batches/?female_vt='.$user_id;
         } else {
             $myUrl = 'https://test.onholdmediagroup.com/api/batches/batches/';
 //        $myUrl = 'http://localhost:8888/api/batches/batches/';
@@ -34,15 +34,15 @@ class extends Component {
         return $response->json(); // array
     }
 
-    public function get_aa_batches()
+    public function get_aa_batches(?int $user_id)
     {
-        if (request()->cookie('ohmg-vt-id') and (int)request()->cookie('ohmg-vt-id') > 0) {
-            $myUrl = 'https://test.onholdmediagroup.com/api/aa-tracking/aa-tracking/?vt=' . (int)request()->cookie('ohmg-vt-id');
+        if ($user_id and $user_id > 0) {
+            $myUrl = 'https://test.onholdmediagroup.com/api/aa-tracking/aa-tracking/?voice_talent_id='.$user_id;
+//            $myUrl = 'http://localhost:8888/api/aa-tracking/aa-tracking/?voice_talent_id='.$user_id;
         } else {
             $myUrl = 'https://test.onholdmediagroup.com/api/aa-tracking/aa-tracking/';
 //        $myUrl = 'http://localhost:8888/api/aa-tracking/aa-tracking/';
         }
-
 
         $response = Http::withToken(config('services.ohmg.token'), 'Token')->get($myUrl);
 
@@ -51,8 +51,9 @@ class extends Component {
 
     public function render()
     {
-        $batches = $this->get_batches();
-        $aa_batches = $this->get_aa_batches();
+        $user_id = User::where('email', auth()->user()->getEmailForVerification())->value('vt_id');
+        $batches = $this->get_batches($user_id);
+        $aa_batches = $this->get_aa_batches($user_id);
         return view(
             'pages.portal.⚡batches',
             ['batches' => $batches, 'aa_batches' => $aa_batches]
@@ -63,7 +64,6 @@ class extends Component {
 <div class="flex flex-col">
     <h1 class="text-2xl font-bold mt-4 mb-4 text-center">My Batches</h1>
     <div class="md:flex justify-center">
-
         <div class="list px-4 w-full">
             <h2 class="text-lg font-bold mb-2 text-center">AA Batches</h2>
             @forelse($aa_batches as $aa)
@@ -81,14 +81,20 @@ class extends Component {
                     </div>
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
-                            <a href="{{ route('portal.upload', ['batch_id' => 'aa-'.$aa['id']]) }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
+                            <a href="{{ route('portal.upload', ['batch_id' => 'aa-'.$aa['id']]) }}"
+                               class="hover:text-blue-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
                                 </svg>
                             </a>
-                            <a href="{{ route('portal.files', ['batch_id' => 'aa-'.$aa['id']]) }}" title="My Files" class="hover:text-blue-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                            <a href="{{ route('portal.files', ['batch_id' => 'aa-'.$aa['id']]) }}" title="My Files"
+                               class="hover:text-blue-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"/>
                                 </svg>
                             </a>
                             <a href="{{ $aa['rfp_file'] }}" title="View RFP File"
@@ -116,7 +122,10 @@ class extends Component {
                     </div>
                 @endif
             @empty
-                <div class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 px-4">No AA Batches</div>
+                <div
+                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 px-4">
+                    No AA Batches
+                </div>
             @endforelse
         </div>
 
@@ -141,7 +150,7 @@ class extends Component {
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
                             @if($batch['priority'] === 1)
-                                <span class="p-2 rounded-md m-2 text-xs bg-green-400 text-white font-bold">
+                                <span class="p-2 rounded-md m-2 text-xs bg-amber-400 text-white font-bold">
                             @elseif($batch['priority'] === 2)
                                         <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white font-bold">
                             @else
@@ -154,14 +163,20 @@ class extends Component {
                     </div>
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
-                            <a href="{{ route('portal.upload', ['batch_id' => 's-'.$batch['id']]) }}" title="Upload files for this batch">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
+                            <a href="{{ route('portal.upload', ['batch_id' => 's-'.$batch['id']]) }}"
+                               title="Upload files for this batch" class="hover:text-blue-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"/>
                                 </svg>
                             </a>
-                            <a href="{{ route('portal.files', ['batch_id' => 's-'.$batch['id']]) }}" title="My Files for batch {{ $batch['id'] }}" class="hover:text-blue-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                            <a href="{{ route('portal.files', ['batch_id' => 's-'.$batch['id']]) }}"
+                               title="My Files for batch {{ $batch['id'] }}" class="hover:text-blue-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"/>
                                 </svg>
                             </a>
                             <a href="{{ $batch['rfp_file_url'] }}" title="View RFP File"
@@ -189,7 +204,10 @@ class extends Component {
                     </div>
                 @endif
             @empty
-                <div class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 px-4">No batches found</div>
+                <div
+                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 px-4">
+                    No batches found
+                </div>
             @endforelse
         </div>
     </div>

@@ -35,6 +35,12 @@ class extends Component {
             $originalName = $file->getClientOriginalName();
             $batchRoute = $this->batch_route();
 
+            Log::info('Uploading file', [
+                'original' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
+                'mime' => $file->getClientMimeType(),
+            ]);
+
             try {
 
                 if ($batchRoute['type'] === 's') {
@@ -43,11 +49,22 @@ class extends Component {
                     $subPath = 'aa-files/' . $batchRoute['batch_id'];
                 }
 
-                $path = $file->storeAs($subPath, $originalName, 'public');
+//                $path = $file->storeAs($subPath, $originalName, 'public');
+                $path = $file->storeAs($subPath, $originalName, 's3');
 
                 // sanity check: confirm it exists on s3
-//                $exists = Storage::disk('public')->exists($path);
-//                Log::info('S3 upload result', ['path' => $path, 'exists' => $exists]);
+                $exists = Storage::disk('s3')->exists($path);
+
+                Log::info('S3 store result', [
+                    'path' => $path,
+                    'exists' => $exists,
+                    'bucket' => config('filesystems.disks.s3.bucket'),
+                    'region' => config('filesystems.disks.s3.region'),
+                ]);
+
+                if (!$exists) {
+                    throw new RuntimeException("S3 upload returned path but object not found: {$path}");
+                }
 
                 MyFiles::create([
                     'name' => $originalName,
@@ -79,7 +96,7 @@ class extends Component {
 ?>
 
 <div>
-    <h1 class="text-2xl font-bold text-center mb-4 mt-4">Upload Audio</h1>
+    <h1 class="text-2xl font-bold text-center mb-4 mt-4">Upload Audio ({{ $batchId }})</h1>
     @if (session()->has('message'))
         <div class="text-center mx-8 my-8  border-l-4 border-green-500 bg-green-100 p-4 text-green-700 opacity-75">
             {{ session('message') }}
@@ -89,8 +106,7 @@ class extends Component {
         <div class="flex justify-center">
             <div>
                 <div>
-                    <input type="file" name="file" class="rounded-md border border-dashed p-16 bg-slate-50"
-                           wire:model="files" multiple>
+                    <input type="file" name="file" class="rounded-md border border-dashed p-16 bg-slate-50" wire:model="files" multiple>
                     @error('file') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-2 flex justify-end">

@@ -68,10 +68,10 @@ class extends Component {
             <h2 class="text-lg font-bold mb-2 text-center">AA Batches</h2>
             @forelse($aa_batches as $aa)
                 <div
-                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-slate-100 border border-gray-300 px-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer"
+                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-slate-100 border border-gray-300 px-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-white"
                     wire:click="aa_toggle({{ $aa['id'] }})">
                     <div class="flex-1">
-                        <span class="text-xs text-gray-700">{{ $aa['id'] }}</span>
+                        <span class="text-xs text-gray-700 dark:text-gray-300">{{ $aa['id'] }}</span>
                     </div>
                     <div class="flex-2">
                         {{ $aa['customer_name'] }}
@@ -82,7 +82,7 @@ class extends Component {
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
                             <a href="{{ route('portal.upload', ['batch_id' => 'aa-'.$aa['id']]) }}"
-                               class="hover:text-blue-400">
+                               class="hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -90,7 +90,7 @@ class extends Component {
                                 </svg>
                             </a>
                             <a href="{{ route('portal.files', ['batch_id' => 'aa-'.$aa['id']]) }}" title="My Files"
-                               class="hover:text-blue-400">
+                               class="hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -98,7 +98,7 @@ class extends Component {
                                 </svg>
                             </a>
                             <a href="{{ $aa['rfp_file'] }}" title="View RFP File"
-                               class="text-sm text-shadow-black hover:text-blue-400">
+                               class="text-sm text-shadow-black hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -123,7 +123,7 @@ class extends Component {
                 @endif
             @empty
                 <div
-                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 px-4">
+                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark: px-4">
                     No AA Batches
                 </div>
             @endforelse
@@ -133,10 +133,10 @@ class extends Component {
             <h2 class="text-lg font-bold mb-2 text-center">Script Batches</h2>
             @forelse ($batches as $batch)
                 <div
-                    class="text-xs w-full flex gap-2 mb-4 items-center rounded-md bg-slate-100 border border-gray-300 px-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer"
+                    class="text-xs w-full flex gap-2 mb-4 items-center rounded-md bg-slate-100 border border-gray-300 px-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-white"
                     wire:click="toggle({{ $batch['id'] }})">
                     <div class="flex-1">
-                        <span class="text-xs text-gray-700">{{ $batch['id'] }}</span>
+                        <span class="text-xs text-gray-700 dark:text-gray-200">{{ $batch['id'] }}</span>
                     </div>
                     <div class="flex-2">
                         {{ $batch['category_details'] }}
@@ -150,12 +150,12 @@ class extends Component {
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
                             @if($batch['priority'] === 1)
-                                <span class="p-2 rounded-md m-2 text-xs bg-amber-400 text-white font-bold">
+                                <span class="p-2 rounded-md m-2 text-xs bg-amber-400 text-white dark:bg-amber-500 dark:text-black font-bold">
                             @elseif($batch['priority'] === 2)
-                                        <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white font-bold">
+                                        <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white dark:bg-red-500 dark:text-black font-bold">
                             @else
                                                 <span
-                                                    class="p-2 rounded-md m-2 text-xs bg-blue-400 text-white font-bold">
+                                                    class="p-2 rounded-md m-2 text-xs bg-blue-400 text-white dark:bg-blue-500 dark:text-black font-bold">
                             @endif
                                                     {{ $batch['priority_string'] }}
                             </span>
@@ -164,7 +164,7 @@ class extends Component {
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">
                             <a href="{{ route('portal.upload', ['batch_id' => 's-'.$batch['id']]) }}"
-                               title="Upload files for this batch" class="hover:text-blue-400">
+                               title="Upload files for this batch" class="hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -172,7 +172,7 @@ class extends Component {
                                 </svg>
                             </a>
                             <a href="{{ route('portal.files', ['batch_id' => 's-'.$batch['id']]) }}"
-                               title="My Files for batch {{ $batch['id'] }}" class="hover:text-blue-400">
+                               title="My Files for batch {{ $batch['id'] }}" class="hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -180,7 +180,7 @@ class extends Component {
                                 </svg>
                             </a>
                             <a href="{{ $batch['rfp_file_url'] }}" title="View RFP File"
-                               class="text-sm text-shadow-black hover:text-blue-400">
+                               class="text-sm text-shadow-black hover:text-blue-400 dark:hover:text-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -205,7 +205,7 @@ class extends Component {
                 @endif
             @empty
                 <div
-                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 px-4">
+                    class="text-xs w-full flex gap-2 mb-4 py-2 items-center rounded-md bg-green-100 border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark: px-4">
                     No batches found
                 </div>
             @endforelse

@@ -10,7 +10,7 @@
 
     @livewireStyles
 </head>
-<body class="bg-white text-shadow-black">
+<body class="bg-white text-shadow-black dark:bg-gray-800 dark:text-white dark:border-zinc-700">
 
 <div class="flex flex-col items-center gap-4 mt-4">
     <h1 class="text-2xl font-bold text-center mb-4 mt-4">OHMG VT Portal</h1>
@@ -26,7 +26,7 @@
         <button class="rounded-md px-4 py-2 mt-4 text-center font-medium bg-blue-500 hover:bg-blue-700 text-white" type="submit">Login</button>
     </form>
 </div>
-<footer class="mb-8 mt-12 text-xs text-gray-900 text-center">
+<footer class="mb-8 mt-12 text-xs text-gray-900 dark:text-gray-200 text-center">
     <span class="">&copy; {{ date('Y') }} On Hold Media Group</span>
 </footer>
 @livewireScripts

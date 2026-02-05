@@ -49,13 +49,13 @@ class extends Component {
                     $subPath = 'aa-files/' . $batchRoute['batch_id'];
                 }
 
-//                $path = $file->storeAs($subPath, $originalName, 'public');
-                $path = $file->storeAs($subPath, $originalName, 's3');
+                $path = $file->storeAs($subPath, $originalName, 'public');
+//                $path = $file->storeAs($subPath, $originalName, 's3');
 
-                // sanity check: confirm it exists on s3
-                $exists = Storage::disk('s3')->exists($path);
+                // sanity check: confirm it exists on disk
+                $exists = Storage::disk('public')->exists($path);
 
-                Log::info('S3 store result', [
+                Log::info('File store result', [
                     'path' => $path,
                     'exists' => $exists,
                     'bucket' => config('filesystems.disks.s3.bucket'),
@@ -63,7 +63,7 @@ class extends Component {
                 ]);
 
                 if (!$exists) {
-                    throw new RuntimeException("S3 upload returned path but object not found: {$path}");
+                    throw new RuntimeException("File upload returned path but object not found: {$path}");
                 }
 
                 MyFiles::create([
@@ -106,7 +106,7 @@ class extends Component {
         <div class="flex justify-center">
             <div>
                 <div>
-                    <input type="file" name="file" class="rounded-md border border-dashed p-16 bg-slate-50" wire:model="files" multiple>
+                    <input type="file" name="file" class="rounded-md border border-dashed p-16 bg-slate-50 dark:bg-slate-700" wire:model="files" multiple>
                     @error('file') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-2 flex justify-end">

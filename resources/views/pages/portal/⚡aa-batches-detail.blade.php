@@ -22,7 +22,7 @@ new class extends Component
 
 <div>
 
-    <ul class="flex flex-col gap-2 mb-4 rounded-md text-sm bg-slate-200 text-gray-700 border border-gray-300 py-2 px-4">
+    <ul class="flex flex-col gap-2 mb-4 rounded-md text-sm bg-slate-200 text-gray-700 border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-200 py-2 px-4">
         @foreach($data as $datum)
             <li>{{ $datum['label'] }}</li>
             <li>{{!! $datum['script'] !!}}</li>

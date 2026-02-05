@@ -11,6 +11,16 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/portal/files', 'pages::portal.⚡files')->name('portal.files');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::livewire('/portal/mail', 'pages::portal.⚡mail')->name('portal.mail');
+
+    Route::get('/test-s3', function () {
+        try {
+            // Try to list bucket contents
+            $files = Storage::disk('s3')->files();
+            return 'S3 connected! Files: ' . count($files);
+        } catch (\Exception $e) {
+            return 'S3 Error: ' . $e->getMessage();
+        }
+    });
 });
 
 Route::get('/', fn () => view('login'))->name('login');

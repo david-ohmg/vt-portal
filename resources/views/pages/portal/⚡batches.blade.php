@@ -84,12 +84,11 @@ class extends Component {
                             @if($batch['priority'] === 1)
                                 <span class="p-2 rounded-md m-2 text-xs bg-amber-400 text-white dark:bg-amber-500 dark:text-black font-bold">
                             @elseif($batch['priority'] === 2)
-                                        <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white dark:bg-red-500 dark:text-black font-bold">
+                                <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white dark:bg-red-500 dark:text-black font-bold">
                             @else
-                                                <span
-                                                    class="p-2 rounded-md m-2 text-xs bg-blue-400 text-white dark:bg-blue-500 dark:text-black font-bold">
+                                <span class="p-2 rounded-md m-2 text-xs bg-blue-400 text-white dark:bg-blue-500 dark:text-black font-bold">
                             @endif
-                                                    {{ $batch['priority_string'] }}
+                                {{ $batch['priority_string'] }}
                             </span>
                         </div>
                     </div>
@@ -163,6 +162,17 @@ class extends Component {
                     </div>
                     <div class="flex-1">
                         {{ Carbon::parse($aa['date_entered'])->format('M j, Y') }}
+                    </div>
+                    <div class="flex-1 items-center">
+                        @if($aa['priority'] === 1)
+                            <span class="p-2 rounded-md m-2 text-xs bg-amber-400 text-white dark:bg-amber-500 dark:text-black font-bold">
+                        @elseif($aa['priority'] === 2)
+                            <span class="p-2 rounded-md m-2 text-xs bg-red-400 text-white dark:bg-red-500 dark:text-black font-bold">
+                        @else
+                            <span class="p-2 rounded-md m-2 text-xs bg-blue-400 text-white dark:bg-blue-500 dark:text-black font-bold">
+                        @endif
+                            {{ $aa['priority_string'] }}
+                        </span>
                     </div>
                     <div class="flex-1">
                         <div class="flex gap-2 items-center">

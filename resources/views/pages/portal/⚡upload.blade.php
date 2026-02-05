@@ -67,14 +67,15 @@ class extends Component {
                     $subPath = 'aa-files/' . $batchRoute['batch_id'];
                 }
 
-                $path = $file->storeAs($subPath, $originalName, 'public');
-//                $path = $file->storeAs($subPath, $originalName, 's3');
+//                $path = $file->storeAs($subPath, $originalName, 'public');
+                $path = $file->storeAs($subPath, $originalName, 's3');
 
                 // append the body of the email
                 $body .= '<p>'.$path.'</p>';
 
                 // sanity check: confirm it exists on disk
-                $exists = Storage::disk('public')->exists($path);
+//                $exists = Storage::disk('public')->exists($path);
+                $exists = Storage::disk('s3')->exists($path);
 
                 Log::info('File store result', [
                     'path' => $path,

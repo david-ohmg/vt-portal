@@ -1,2 +1,2 @@
-import './bootstrap';
 import './toggleDark';
+import './bootstrap';

@@ -29,5 +29,9 @@
         <span class="text-green-500" title="Complete">
             <x-icon-check />
         </span>
+    @else
+        <span class="text-red-500" title="Incomplete">
+            <x-icon-x />
+        </span>
     @endif
 </div>

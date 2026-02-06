@@ -18,18 +18,20 @@ class OhmgApiService
     /**
      * Fetch batches from the API
      */
-    public function getBatches(?int $userId = null): array
+    public function getBatches(?int $userId = null, ?bool $is_archive = false): array
     {
         $params = ($userId && $userId > 0) ? ['female_vt' => $userId] : [];
+        $params['archive'] = $is_archive ? 'true' : 'false';
         return $this->fetchFromEndpoint('batches/batches/', $params);
     }
 
     /**
      * Fetch AA batches from the API
      */
-    public function getAaBatches(?int $userId = null): array
+    public function getAaBatches(?int $userId = null, ?bool $is_archive = false): array
     {
         $params = ($userId && $userId > 0) ? ['voice_talent_id' => $userId] : [];
+        $params['archive'] = $is_archive ? 'true' : 'false';
         return $this->fetchFromEndpoint('aa-tracking/aa-tracking/', $params);
     }
 

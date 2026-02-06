@@ -3,7 +3,7 @@
 @php
     $batchId = $type === 'aa' ? 'aa-' . $batch['id'] : 's-' . $batch['id'];
     $priorityColors = [
-        1 => 'bg-amber-400 text-white dark:bg-amber-500 dark:text-black',
+        1 => 'bg-yellow-400 text-white dark:bg-yellow-500 dark:text-black',
         2 => 'bg-red-400 text-white dark:bg-red-500 dark:text-black',
     ];
     $defaultPriority = 'bg-blue-400 text-white dark:bg-blue-500 dark:text-black';

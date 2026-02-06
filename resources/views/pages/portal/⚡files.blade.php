@@ -6,7 +6,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Carbon\Carbon;
 
-new #[Title('Upload Files')]
+new #[Title('My Files')]
 class extends Component
 {
 

@@ -6,8 +6,9 @@ use App\Traits\HasMultipleToggles;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('My Batches')]
-class extends Component {
+new #[Title('Archive Batches')]
+class extends Component
+{
     use HasMultipleToggles, LoadsBatches;
 
     public ?int $openId = null;
@@ -15,13 +16,19 @@ class extends Component {
 
     public function render(OhmgApiService $apiService)
     {
-        return view('pages.portal.⚡batches', $this->loadAllBatches($apiService));
+        // You can add filtering logic here for archived batches
+        $data = $this->loadAllBatches($apiService);
+
+        // Example: filter archived batches
+        // $data['batches'] = array_filter($data['batches'], fn($b) => $b['is_archived'] ?? false);
+
+        return view('pages.portal.⚡archive', $data);
     }
 };
 ?>
 
 <div class="flex flex-col">
-    <h1 class="text-2xl font-bold mt-4 mb-4 text-center">My Batches</h1>
+    <h1 class="text-2xl font-bold mt-4 mb-4 text-center">Archive Batches</h1>
 
     <div class="md:flex justify-center">
         <x-batch-list

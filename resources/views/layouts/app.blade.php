@@ -6,6 +6,28 @@
 
         <title>{{ $title ?? config('app.name') }}</title>
 
+        <script>
+            (function() {
+                const STORAGE_KEY = 'theme';
+
+                function systemPrefersDark() {
+                    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                }
+
+                function getInitialTheme() {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved === 'light' || saved === 'dark') return saved;
+                    return systemPrefersDark() ? 'dark' : 'light';
+                }
+
+                const theme = getInitialTheme();
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                }
+                document.documentElement.dataset.theme = theme;
+            })();
+        </script>
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         @livewireStyles

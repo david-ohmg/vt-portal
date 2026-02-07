@@ -57,19 +57,19 @@ class extends Component {
 <div>
     <h1 class="text-2xl mt-4 mb-4 font-bold text-center">My Profile</h1>
     <form wire:submit.prevent="save">
-        <div class="flex-col px-8 py-4 bg-slate-100 mx-8 rounded-md border border-gray-200 dark:bg-slate-800 dark:border-zinc-700">
+        <div class="flex-col px-8 py-4 bg-zinc-100 mx-8 rounded-md border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700">
             <label class="block text-xs" for="name">Name</label>
-            <input class="border border-gray-300 bg-slate-50 dark:border-zinc-700 dark:bg-slate-700 rounded p-2 w-full" type="text" id="name" wire:model="name">
+            <input class="border border-gray-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-700 rounded p-2 w-full" type="text" id="name" wire:model="name">
             @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
             <label class="block text-xs" for="email">Email</label>
-            <input class="border border-gray-300 bg-slate-50 dark:border-zinc-700 dark:bg-slate-700 rounded p-2 w-full" type="email" id="email" wire:model="email">
+            <input class="border border-gray-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-700 rounded p-2 w-full" type="email" id="email" wire:model="email">
             @error('email') <span class="text-red-500">{{ $message }}</span> @enderror
             <label class="block text-xs" for="password">Password</label>
-            <input class="border border-gray-300 bg-slate-50 dark:border-zinc-700 dark:bg-slate-700 rounded p-2 w-full" type="password" id="password"
+            <input class="border border-gray-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-700 rounded p-2 w-full" type="password" id="password"
                    wire:model="password">
             @error('password') <span class="text-red-500">{{ $message }}</span> @enderror
             <label class="block text-xs" for="password_confirm">Confirm Password</label>
-            <input class="border border-gray-300 bg-slate-50 dark:border-zinc-700 dark:bg-slate-700 rounded p-2 w-full" type="password" id="password_confirm"
+            <input class="border border-gray-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-700 rounded p-2 w-full" type="password" id="password_confirm"
                    wire:model="password_confirm">
             <button class="bg-blue-500 hover:bg-blue-700 text-white rounded p-2 mt-4">Update Profile</button>
         </div>

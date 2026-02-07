@@ -10,7 +10,7 @@
 
     @livewireStyles
 </head>
-<body class="bg-white text-shadow-black dark:bg-gray-800 dark:text-white dark:border-zinc-700">
+<body class="bg-white text-shadow-black dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
 
 <div class="flex flex-col items-center gap-4 mt-4">
     <h1 class="text-2xl font-bold text-center mb-4 mt-4">OHMG VT Portal</h1>
@@ -19,10 +19,10 @@
     @endif
     <form action="{{ route('login.post') }}" method="post">
         @csrf
-        <label class="block uppercase text-slate-500 mb-2" for="email">Email</label>
-        <input class="rounded-md appearance-none border w-full py-2 px-3 text-slate-500 leading-tight focus:outline-none" type="email" name="email" id="email">
-        <label class="block uppercase text-slate-500 mb-2" for="password">Password</label>
-        <input class="rounded-md appearance-none border w-full py-2 px-3 text-slate-500 leading-tight focus:outline-none" type="password" name="password" id="password">
+        <label class="block uppercase text-zinc-500 mb-2" for="email">Email</label>
+        <input class="rounded-md appearance-none border w-full py-2 px-3 text-zinc-500 leading-tight focus:outline-none" type="email" name="email" id="email">
+        <label class="block uppercase text-zinc-500 mb-2" for="password">Password</label>
+        <input class="rounded-md appearance-none border w-full py-2 px-3 text-zinc-500 leading-tight focus:outline-none" type="password" name="password" id="password">
         <button class="rounded-md px-4 py-2 mt-4 text-center font-medium bg-blue-500 hover:bg-blue-700 text-white" type="submit">Login</button>
     </form>
 </div>

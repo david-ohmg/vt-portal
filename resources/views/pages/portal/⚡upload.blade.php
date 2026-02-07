@@ -1,13 +1,13 @@
 <?php
 
-use App\Mail\PortalMail;
-use App\Models\MyFiles;
+use App\Services\FileUploadService;
+use App\Services\OhmgApiService;
+use App\Services\UploadNotificationService;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Log;
 
 new #[Title('Upload Files')]
 class extends Component {
@@ -19,141 +19,116 @@ class extends Component {
     #[Url(as: 'batch_id')]
     public string $batchId;
 
-    public function batchRoute(): array
-    {
-        $batch_id = (int)str_replace(['aa-', 's-'], '', $this->batchId);
-        $label = str_contains($this->batchId, 's-') ? 's' : 'aa';
-        return ['type' => $label, 'batch_id' => $batch_id];
-    }
-
-    public function batchDetail()
-    {
-        $batchRoute = $this->batchRoute();
-        if($batchRoute['type'] === 's')
-            $url = config('services.ohmg.url') . 'batches/batches/' . $batchRoute['batch_id'];
-        else
-            $url = config('services.ohmg.url') . 'aa-tracking/aa-tracking/' . $batchRoute['batch_id'];
-        $token = config('services.ohmg.token');
-        $response = Http::withToken($token, 'Token')->get($url);
-        return $response->json();
-    }
-
-    public function sendMail($email, $body)
-    {
-        Mail::to($email)->send(new PortalMail(
-            ['subject' => 'Files Uploaded for ' . $this->batchId, 'message' => $body]
-        ));
-    }
-
-    public function save()
-    {
+    public function save(
+        FileUploadService $uploadService,
+        OhmgApiService $apiService,
+        UploadNotificationService $notificationService
+    ) {
         $this->validate();
-        $body = '';
+
+        $uploadedPaths = [];
+
+        // Upload all files
         foreach ($this->files as $file) {
-            $originalName = $file->getClientOriginalName();
-            $batchRoute = $this->batchRoute();
-
-            Log::info('Uploading file', [
-                'original' => $file->getClientOriginalName(),
-                'size' => $file->getSize(),
-                'mime' => $file->getClientMimeType(),
-            ]);
-
-            try {
-
-                if ($batchRoute['type'] === 's') {
-                    $subPath = 'voice-files';
-                } else {
-                    $subPath = 'aa-files/' . $batchRoute['batch_id'];
-                }
-
-//                $path = $file->storeAs($subPath, $originalName, 'public');
-                $path = $file->storeAs($subPath, $originalName, 's3');
-
-                // append the body of the email
-                $body .= '<p>'.$path.'</p>';
-
-                // sanity check: confirm it exists on disk
-//                $exists = Storage::disk('public')->exists($path);
-                $exists = Storage::disk('s3')->exists($path);
-
-                Log::info('File store result', [
-                    'path' => $path,
-                    'exists' => $exists,
-                    'bucket' => config('filesystems.disks.s3.bucket'),
-                    'region' => config('filesystems.disks.s3.region'),
-                ]);
-
-                if (!$exists) {
-                    throw new RuntimeException("File upload returned path but object not found: {$path}");
-                }
-
-                // create MyFiles model
-                MyFiles::create([
-                    'name' => $originalName,
-                    'user_id' => auth()->id(),
-                    'size' => $file->getSize(),
-                    'path' => $path,
-                    'mime_type' => $file->getClientMimeType(),
-                    'batch_id' => $this->batchId
-                ]);
-
-
-            } catch (Throwable $e) {
-                Log::error('Upload failed', [
-                    'message' => $e->getMessage(),
-                    'file' => $originalName,
-                ]);
-
-                throw $e; // so you see the real error in dev
-            }
-
+            $path = $uploadService->uploadFile($file, $this->batchId, auth()->id());
+            $uploadedPaths[] = $path;
         }
 
-        // get batch detail and send email for processed files
-        $data = $this->batchDetail();
-        $email = $data['writer_details'];
-        $this->sendMail($email, $body);
+        // Update batch status
+        $batchRoute = $uploadService->parseBatchId($this->batchId);
+        $apiService->updateBatch(
+            $batchRoute['type'],
+            $batchRoute['batch_id'],
+            [
+                'emp_recorded' => 8,
+                'date_recorded' => now()->toDateString(),
+            ]
+        );
 
+        // Send notification email
+        $batchDetail = $apiService->getBatchDetail($batchRoute['type'], $batchRoute['batch_id']);
+        $writerEmail = $batchDetail['writer_details'] ?? null;
+
+        if ($writerEmail) {
+            $notificationService->sendUploadNotification($writerEmail, $this->batchId, $uploadedPaths);
+        }
+
+        // Reset form and show success
+        $this->files = [];
         session()->flash('message', 'Files uploaded successfully!');
     }
 
     public function render()
     {
-        return view('pages.portal.⚡upload', ['files' => $this->files, 'batchId' => $this->batchId]);
+        return view('pages.portal.⚡upload');
     }
 };
 ?>
 
 <div>
     <h1 class="text-2xl font-bold text-center mb-4 mt-4">Upload Audio ({{ $batchId }})</h1>
+
     @if (session()->has('message'))
-        <div class="text-center mx-8 my-8  border-l-4 border-green-500 bg-green-100 p-4 text-green-700 opacity-75">
+        <div class="text-center mx-8 my-8 border-l-4 border-green-500 bg-green-100 p-4 text-green-700 opacity-75">
             {{ session('message') }}
         </div>
     @endif
+
     <form wire:submit="save">
         <div class="flex justify-center">
-            <div>
-                <div>
-                    <input type="file" name="file"
-                           class="rounded-md border border-dashed p-16 bg-slate-50 dark:bg-slate-700" wire:model="files"
-                           multiple>
-                    @error('file') <span class="error">{{ $message }}</span> @enderror
+            <div class="w-full max-w-2xl">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">
+                        Select Audio Files
+                    </label>
+                    <input
+                        type="file"
+                        wire:model="files"
+                        multiple
+                        accept="audio/*"
+                        class="w-full rounded-md border border-dashed p-16 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer transition">
+                    @error('files.*')
+                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                    @enderror
                 </div>
-                <div class="mt-2 flex justify-end">
-                    <button type="submit"
-                            class="rounded-md bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4">Upload
+
+                @if($files)
+                    <div class="mb-4 p-4 bg-white dark:bg-zinc-800 rounded-md border">
+                        <h3 class="font-semibold mb-2">Selected Files ({{ count($files) }})</h3>
+                        <ul class="space-y-2">
+                            @foreach($files as $file)
+                                <li class="flex items-center gap-2 text-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-green-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300">{{ $file->getClientOriginalName() }}</span>
+                                    <span class="text-gray-500 text-xs">({{ number_format($file->getSize() / 1024, 2) }} KB)</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div class="flex justify-end gap-2">
+                    <a href="{{ route('portal.batches') }}"
+                       class="rounded-md bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4">
+                        Cancel
+                    </a>
+                    <button
+                        type="submit"
+                        @disabled(!$files)
+                        class="rounded-md bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Upload {{ count($files) > 0 ? '(' . count($files) . ')' : '' }}
                     </button>
                 </div>
             </div>
         </div>
     </form>
-    @if($files)
-        @foreach($files as $file)
-            <div class="mt-4 text-center">
-                <p class="text-gray-700">{{ $file->getClientOriginalName() }}</p>
-            </div>
-        @endforeach
-    @endif
+
+    <div wire:loading wire:target="save" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-zinc-800 p-6 rounded-lg shadow-xl">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+            <p class="mt-4 text-center font-semibold">Uploading files...</p>
+        </div>
+    </div>
 </div>

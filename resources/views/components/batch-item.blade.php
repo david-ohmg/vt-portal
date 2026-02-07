@@ -11,8 +11,8 @@
     $isComplete = $type === 'aa' ? $batch['qc_1_date'] ?? false : $batch['date_qc1'] ?? false;
 @endphp
 
-<div class="w-full mb-4 rounded bg-slate-100 dark:bg-zinc-800 px-4 py-4">
-    <div class="text-xs w-full flex gap-2 mb-4 items-center rounded-md bg-slate-100 border border-gray-300 px-4 py-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-white"
+<div class="w-full mb-4 rounded border border-gray-300 bg-zinc-100 dark:bg-zinc-800 dark:border-zinc-700 px-4 py-4">
+    <div class="text-xs w-full flex gap-2 mb-4 items-center rounded-md bg-zinc-200 border border-gray-300 px-4 py-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-white"
         {{ $attributes }}>
         <div class="flex-1">
             <span class="text-xs text-gray-700 dark:text-gray-200">{{ $batch['id'] }}</span>

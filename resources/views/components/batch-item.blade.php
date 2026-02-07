@@ -1,4 +1,4 @@
-@props(['batch', 'type' => 'script'])
+@props(['batch', 'openId', 'type' => 'script'])
 
 @php
     $batchId = $type === 'aa' ? 'aa-' . $batch['id'] : 's-' . $batch['id'];
@@ -27,18 +27,22 @@
             {{ $type === 'aa' ? $batch['voice_talent_details'] : $batch['female_vt_details'] }}
         </div>
     </div>
-    <div class="flex gap-2 mb-4">
-        <div class="flex-1">
-            <span class="p-1 rounded-md m-2 text-xs {{ $priorityClass }} font-medium">
-                {{ $batch['priority_string'] }}
-            </span>
+    @if($openId === $batch['id'])
+        <div>
+            @livewire('pages::portal.' . ($type === 'aa' ? 'aa-' : '') . 'batches-detail',
+                ['id' => $batch['id']],
+                key('detail-' . $batch['id']))
         </div>
-        <div class="flex- items-center text-end">
-            <x-batch-actions
-                :batchId="$batchId"
-                :hasScripts="$batch['n_scripts'] > 0"
-                :rfpUrl="$type === 'aa' ? $batch['rfp_file'] : $batch['rfp_file_url']"
-                :isComplete="$isComplete" />
-        </div>
+    @endif
+    <div class="flex w-full items-center justify-between">
+        <span class="p-1 rounded-md m-2 text-xs {{ $priorityClass }} font-medium">
+            {{ $batch['priority_string'] }}
+        </span>
+        <x-batch-actions
+            :batchId="$batchId"
+            :hasScripts="$batch['n_scripts'] > 0"
+            :n_files="0"
+            :rfpUrl="$type === 'aa' ? $batch['rfp_file'] : $batch['rfp_file_url']"
+            :isComplete="$isComplete" />
     </div>
 </div>

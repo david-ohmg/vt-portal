@@ -1,4 +1,4 @@
-@props(['batchId', 'hasScripts', 'rfpUrl', 'isComplete'])
+@props(['batchId', 'hasScripts', "n_files", 'rfpUrl', 'isComplete'])
 
 <div class="flex gap-2 items-center">
     @if($hasScripts)

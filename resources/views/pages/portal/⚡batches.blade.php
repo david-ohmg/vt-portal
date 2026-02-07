@@ -23,7 +23,7 @@ class extends Component {
 <div class="flex flex-col">
     <h1 class="text-2xl font-bold mt-4 mb-4 text-center">My Batches</h1>
 
-    <div class="md:flex justify-center">
+    <div class="flex flex-col md:flex-row justify-center gap-4">
         <x-batch-list
             title="Script Batches"
             :batches="$batches"

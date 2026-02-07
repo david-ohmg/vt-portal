@@ -11,32 +11,36 @@
     $isComplete = $type === 'aa' ? $batch['qc_1_date'] ?? false : $batch['date_qc1'] ?? false;
 @endphp
 
-<div class="text-xs w-full flex gap-2 mb-4 items-center rounded-md bg-slate-100 border border-gray-300 px-4 py-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-white"
-    {{ $attributes }}>
-    <div class="flex-1">
-        <span class="text-xs text-gray-700 dark:text-gray-200">{{ $batch['id'] }}</span>
-    </div>
-    <div class="flex-2">
-        {{ $type === 'aa' ? $batch['customer_name'] : $batch['category_details'] }}
-    </div>
-    <div class="flex-1">
-        {{ Carbon\Carbon::parse($batch['date_entered'])->format('M j, Y') }}
-    </div>
-    @if($type === 'script')
+<div class="w-full mb-4 rounded bg-slate-100 dark:bg-zinc-800 px-4 py-4">
+    <div class="text-xs w-full flex gap-2 mb-4 items-center rounded-md bg-slate-100 border border-gray-300 px-4 py-4 hover:bg-gray-200 hover:text-slate-900 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-white"
+        {{ $attributes }}>
         <div class="flex-1">
-            {{ $batch['female_vt_details'] }}
+            <span class="text-xs text-gray-700 dark:text-gray-200">{{ $batch['id'] }}</span>
         </div>
-    @endif
-    <div class="flex-1">
-        <span class="p-2 rounded-md m-2 text-xs {{ $priorityClass }} font-bold">
-            {{ $batch['priority_string'] }}
-        </span>
+        <div class="flex-2">
+            {{ $type === 'aa' ? $batch['customer_name'] : $batch['category_details'] }}
+        </div>
+        <div class="flex-1">
+            {{ Carbon\Carbon::parse($batch['date_entered'])->format('M j, Y') }}
+        </div>
+{{--        @if($type === 'script')--}}
+            <div class="flex-1">
+                {{ $type === 'aa' ? $batch['voice_talent_details'] : $batch['female_vt_details'] }}
+            </div>
+{{--        @endif--}}
     </div>
-    <div class="flex-1">
-        <x-batch-actions
-            :batchId="$batchId"
-            :hasScripts="$batch['n_scripts'] > 0"
-            :rfpUrl="$type === 'aa' ? $batch['rfp_file'] : $batch['rfp_file_url']"
-            :isComplete="$isComplete" />
+    <div class="flex gap-2 mb-4">
+        <div class="flex-1">
+            <span class="p-2 rounded-md m-2 text-xs {{ $priorityClass }} font-bold">
+                {{ $batch['priority_string'] }}
+            </span>
+        </div>
+        <div class="flex- items-center text-end">
+            <x-batch-actions
+                :batchId="$batchId"
+                :hasScripts="$batch['n_scripts'] > 0"
+                :rfpUrl="$type === 'aa' ? $batch['rfp_file'] : $batch['rfp_file_url']"
+                :isComplete="$isComplete" />
+        </div>
     </div>
 </div>

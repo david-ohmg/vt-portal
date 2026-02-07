@@ -23,15 +23,13 @@
         <div class="flex-1">
             {{ Carbon\Carbon::parse($batch['date_entered'])->format('M j, Y') }}
         </div>
-{{--        @if($type === 'script')--}}
-            <div class="flex-1">
-                {{ $type === 'aa' ? $batch['voice_talent_details'] : $batch['female_vt_details'] }}
-            </div>
-{{--        @endif--}}
+        <div class="flex-1">
+            {{ $type === 'aa' ? $batch['voice_talent_details'] : $batch['female_vt_details'] }}
+        </div>
     </div>
     <div class="flex gap-2 mb-4">
         <div class="flex-1">
-            <span class="p-2 rounded-md m-2 text-xs {{ $priorityClass }} font-bold">
+            <span class="p-1 rounded-md m-2 text-xs {{ $priorityClass }} font-medium">
                 {{ $batch['priority_string'] }}
             </span>
         </div>

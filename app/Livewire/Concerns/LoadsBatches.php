@@ -19,13 +19,13 @@ trait LoadsBatches
     /**
      * Load both batch types
      */
-    protected function loadAllBatches(OhmgApiService $apiService): array
+    protected function loadAllBatches(OhmgApiService $apiService, ?bool $archive = false): array
     {
         $userId = $this->getUserVtId();
 
         return [
-            'batches' => $apiService->getBatches($userId),
-            'aa_batches' => $apiService->getAaBatches($userId),
+            'batches' => $apiService->getBatches($userId, $archive),
+            'aa_batches' => $apiService->getAaBatches($userId, $archive),
         ];
     }
 }

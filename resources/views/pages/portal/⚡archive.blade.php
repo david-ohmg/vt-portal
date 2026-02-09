@@ -17,10 +17,7 @@ class extends Component
     public function render(OhmgApiService $apiService)
     {
         // You can add filtering logic here for archived batches
-        $data = $this->loadAllBatches($apiService);
-
-        // Example: filter archived batches
-        // $data['batches'] = array_filter($data['batches'], fn($b) => $b['is_archived'] ?? false);
+        $data = $this->loadAllBatches($apiService, true);
 
         return view('pages.portal.⚡archive', $data);
     }

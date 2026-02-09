@@ -10,7 +10,7 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/portal/profile', 'pages::portal.⚡profile')->name('portal.profile');
     Route::livewire('/portal/files', 'pages::portal.⚡files')->name('portal.files');
     Route::livewire('/portal/mail', 'pages::portal.⚡mail')->name('portal.mail');
-    Route::livewire('portal/archive', 'pages::portal.⚡batches')->name('portal.archive');
+    Route::livewire('portal/archive', 'pages::portal.⚡archive')->name('portal.archive');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

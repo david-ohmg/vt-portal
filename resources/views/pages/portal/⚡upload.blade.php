@@ -49,8 +49,10 @@ class extends Component {
         $batchDetail = $apiService->getBatchDetail($batchRoute['type'], $batchRoute['batch_id']);
         $writerEmail = $batchDetail['writer_details'] ?? null;
 
+        $customerName = $batchRoute['type'] === 'aa' ? $batchDetail['customer_name'] : $batchDetail['category_details'];
+
         if ($writerEmail) {
-            $notificationService->sendUploadNotification($writerEmail, $this->batchId, $uploadedPaths);
+            $notificationService->sendUploadNotification($writerEmail, $customerName, $this->batchId, $uploadedPaths);
         }
 
         // Reset form and show success

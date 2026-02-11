@@ -10,12 +10,17 @@ class UploadNotificationService
     /**
      * Send upload notification email
      */
-    public function sendUploadNotification(string $recipientEmail, string $batchId, array $filePaths): void
+    public function sendUploadNotification(
+        string $recipientEmail,
+        string $customerName,
+        string $batchId,
+        array $filePaths
+    ): void
     {
         $body = $this->buildEmailBody($filePaths);
 
         Mail::to($recipientEmail)->send(new PortalMail([
-            'subject' => "Files Uploaded for {$batchId}",
+            'subject' => "Files Uploaded for {$customerName} ({$batchId})",
             'message' => $body,
         ]));
     }

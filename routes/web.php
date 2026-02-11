@@ -23,6 +23,13 @@ Route::middleware('auth')->group(function () {
             return 'S3 Error: ' . $e->getMessage();
         }
     });
+
+    Route::get('/test-mail', function () {
+        Mail::to('guitardave8077@gmail.com')->send(new PortalMail([
+            'subject' => 'Files Uploaded Successfully',
+            'message' => '<p>Your files have been uploaded:</p><ul><li>file1.mp3</li><li>file2.mp3</li></ul>'
+        ]));
+    });
 });
 
 Route::get('/', fn () => view('login'))->name('login');

@@ -44,8 +44,10 @@ class PortalMail extends Mailable
         return new Content(
             view: 'emails.test',
             with: [
-                'heading' => $this->data['subject'],
-                'test_message' => $this->data['message'],
+                'heading' => $this->data['heading'] ?? $this->data['subject'] ?? 'Notification',
+                'emailMessage' => $this->data['message'] ?? $this->data['test_message'] ?? '',
+                'actionUrl' => $this->data['actionUrl'] ?? null,
+                'actionText' => $this->data['actionText'] ?? null,
             ],
         );
     }

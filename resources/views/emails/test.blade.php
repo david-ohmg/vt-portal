@@ -197,7 +197,7 @@
                         <p>
                             <strong>On Hold Media Group</strong><br>
                             Voice Talent Portal<br>
-                            <a href="mailto:support@onholdmediagroup.com">support@onholdmediagroup.com</a>
+                            <a href="mailto:support@onholdwizard.com">support@onholdwizard.com</a>
                         </p>
                         <p style="margin-top: 15px;">
                             &copy; {{ date('Y') }} On Hold Media Group. All rights reserved.

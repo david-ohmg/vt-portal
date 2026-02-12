@@ -26,6 +26,9 @@
         <div class="flex-1">
             {{ $type === 'aa' ? $batch['voice_talent_details'] : $batch['female_vt_details'] }}
         </div>
+        <div class="flex-1">
+            ({{ $batch['n_scripts'] }})
+        </div>
     </div>
     @if($openId === $batch['id'])
         <div>
@@ -41,7 +44,8 @@
         <x-batch-actions
             :batchId="$batchId"
             :hasScripts="$batch['n_scripts'] > 0"
-            :n_files="0"
+            :nScripts="$batch['n_scripts']"
+            :nFiles="0"
             :rfpUrl="$type === 'aa' ? $batch['rfp_file'] : $batch['rfp_file_url']"
             :isComplete="$isComplete" />
     </div>

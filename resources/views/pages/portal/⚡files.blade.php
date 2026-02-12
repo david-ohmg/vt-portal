@@ -5,6 +5,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 new #[Title('My Files')]
 class extends Component
@@ -27,7 +28,7 @@ class extends Component
         @forelse ($files as $file)
             <div class="flex flex-col gap-2 rounded-lg border border-gray-300 bg-zinc-100 dark:bg-zinc-800 dark:border-zinc-700 p-4 hover:shadow-lg transition-shadow">
                 <div class="font-semibold text-lg truncate" title="{{ $file->name }}">
-                    {{ $file->name }}
+                    <a target="_blank" href="{{ Storage::disk('s3')->url($file->path) }}" class="hover:text-blue-500 dark:hover:text-blue-400">{{ $file->name }}</a>
                 </div>
                 <div class="text-sm text-gray-600 dark:text-gray-400">
                     <div class="flex items-center gap-2">

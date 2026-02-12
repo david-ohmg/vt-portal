@@ -8,6 +8,7 @@ use Illuminate\View\Component;
 
 class BatchItem extends Component
 {
+    public $batch;
     /**
      * Create a new component instance.
      */
@@ -21,6 +22,7 @@ class BatchItem extends Component
      */
     public function render(): View|Closure|string
     {
+//        $nScripts = count($this->batch->scripts);
         return view('components.batch-item');
     }
 }

@@ -25,14 +25,14 @@ class extends Component {
 
     <div class="flex flex-col md:flex-row justify-center gap-4">
         <x-batch-list
-            title="Script Batches"
+            title="Script Batches ({{count($batches)}})"
             :batches="$batches"
             type="script"
             :openId="$openId"
             toggleMethod="toggle" />
 
         <x-batch-list
-            title="AA Batches"
+            title="AA Batches ({{count($aa_batches)}})"
             :batches="$aa_batches"
             type="aa"
             :openId="$aaId"

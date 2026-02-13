@@ -45,7 +45,7 @@
             :batchId="$batchId"
             :hasScripts="$batch['n_scripts'] > 0"
             :nScripts="$batch['n_scripts']"
-            :nFiles="0"
+            :nFiles="App\Models\MyFiles::where('batch_id', $batchId)->count()"
             :rfpUrl="$type === 'aa' ? $batch['rfp_file'] : $batch['rfp_file_url']"
             :isComplete="$isComplete" />
     </div>

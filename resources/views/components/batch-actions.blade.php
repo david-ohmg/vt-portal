@@ -5,7 +5,11 @@
         <a href="{{ route('portal.upload', ['batch_id' => $batchId]) }}"
            title="Upload files for this batch"
            class="hover:text-blue-400 dark:hover:text-blue-300">
-            <x-icon-upload />
+            @if($nFiles > 0)
+                <x-icon-files-check />
+            @else
+                <x-icon-upload />
+            @endif
         </a>
     @else
         <span title="Upload unavailable">

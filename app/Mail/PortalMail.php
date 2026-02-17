@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -55,10 +56,19 @@ class PortalMail extends Mailable
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {
-        return [];
+        $attachments = [];
+
+        if (isset($this->data['attachments']) && is_array($this->data['attachments'])) {
+            foreach ($this->data['attachments'] as $filePath) {
+                // Attach from S3 storage
+                $attachments[] = Attachment::fromStorageDisk('s3', $filePath);
+            }
+        }
+
+        return $attachments;
     }
 }

@@ -28,9 +28,8 @@ class PortalMail extends Mailable
             cc: [
                 new Address('david@onholdwizard.com', 'David'),
                 new Address('whitney@onholdwizard.com', 'Whitney'),
-                new Address('gary@onholdwizard.com', 'Gary'),
                 new Address('brian@onholdwizard.com', 'Hoff'),
-                new Address('vt@onholdwizard.com', 'Phone Recordings')
+//                new Address('vt@onholdwizard.com', 'Phone Recordings')
             ],
             replyTo: [new Address('vt@onholdwizard.com', 'VT Portal')],
             subject: $this->data['subject'],

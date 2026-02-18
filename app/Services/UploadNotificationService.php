@@ -20,7 +20,7 @@ class UploadNotificationService
     {
         $body = $this->buildEmailBody($filePaths);
 
-        Mail::to($recipientEmail)->to($vtEmail)->send(new PortalMail([
+        Mail::to($vtEmail)->cc($recipientEmail)->send(new PortalMail([
             'subject' => "Files Uploaded for {$customerName} ({$batchId})",
             'message' => $body,
             'attachments' => $filePaths,

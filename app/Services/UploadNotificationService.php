@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mail\PortalMail;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class UploadNotificationService
@@ -25,6 +26,19 @@ class UploadNotificationService
             'message' => $body,
             'attachments' => $filePaths,
         ]));
+
+        $this->notifyBatchRecorded($batchId);
+    }
+
+    /**
+     * Notify the OnHold Wizard API that a batch has been recorded
+     */
+    private function notifyBatchRecorded(string $batchId): void
+    {
+        $numericBatchId = (int) str_replace(['aa-', 's-'], '', $batchId);
+
+        Http::withToken(config('services.ohmg.token'), 'Token')
+            ->put(config('services.onholdwizard.url') . "batches/recorded/{$numericBatchId}");
     }
 
     /**

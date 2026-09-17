@@ -39,5 +39,8 @@ return [
         'token' => env('OHMG_AUTH_TOKEN'),
     ],
 
+    'onholdwizard' => [
+        'url' => env('ONHOLDWIZARD_API_URL', 'https://test.onholdwizard.com/api/'),
+    ],
 
 ];

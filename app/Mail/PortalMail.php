@@ -28,7 +28,6 @@ class PortalMail extends Mailable
         return new Envelope(
             cc: [
                 new Address('david@onholdwizard.com', 'David'),
-                new Address('whitney@onholdwizard.com', 'Whitney'),
                 new Address('brian@onholdwizard.com', 'Hoff'),
                 new Address('misikir@onholdwizard.com', 'Misikir')
 //                new Address('vt@onholdwizard.com', 'Phone Recordings')

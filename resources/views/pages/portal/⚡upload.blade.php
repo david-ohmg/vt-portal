@@ -49,9 +49,9 @@ class extends Component {
         $batchDetail = $apiService->getBatchDetail($batchRoute['type'], $batchRoute['batch_id']);
         $writerEmail = $batchDetail['writer_details'] ?? null;
 
-        $vtEmail = $batchRoute['type'] === 'aa' ? $batchDetail['vt_email'] : $batchDetail['female_vt_email'];;
+        $vtEmail = $batchRoute['type'] === 'aa' ? ($batchDetail['vt_email'] ?? null) : ($batchDetail['female_vt_email'] ?? null);
 
-        $customerName = $batchRoute['type'] === 'aa' ? $batchDetail['customer_name'] : $batchDetail['category_details'];
+        $customerName = $batchRoute['type'] === 'aa' ? ($batchDetail['customer_name'] ?? null) : ($batchDetail['category_details'] ?? null);
 
         if ($writerEmail) {
             $notificationService->sendUploadNotification($writerEmail, $vtEmail, $customerName, $this->batchId, $uploadedPaths);

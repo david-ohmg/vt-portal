@@ -40,7 +40,7 @@ class UploadNotificationService
         $path = str_contains($batchId, 'aa-') ? 'aa-tracking/recorded' : 'batches/recorded';
 
         $response = Http::withToken(config('services.ohmg.token'), 'Token')
-            ->put(config('services.onholdwizard.url') . "{$path}/{$numericBatchId}/");
+            ->put(config('services.ohmg.url') . "{$path}/{$numericBatchId}/");
 
         if ($response->failed()) {
             Log::error('Failed to notify OnHold Wizard that batch was recorded', [

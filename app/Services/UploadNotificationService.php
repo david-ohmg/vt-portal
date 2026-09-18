@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\PortalMail;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class UploadNotificationService
@@ -37,8 +38,16 @@ class UploadNotificationService
     {
         $numericBatchId = (int) str_replace(['aa-', 's-'], '', $batchId);
 
-        Http::withToken(config('services.ohmg.token'), 'Token')
-            ->put(config('services.onholdwizard.url') . "batches/recorded/{$numericBatchId}");
+        $response = Http::withToken(config('services.ohmg.token'), 'Token')
+            ->put(config('services.onholdwizard.url') . "batches/recorded/{$numericBatchId}/");
+
+        if ($response->failed()) {
+            Log::error('Failed to notify OnHold Wizard that batch was recorded', [
+                'batch_id' => $batchId,
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+        }
     }
 
     /**

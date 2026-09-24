@@ -9,4 +9,132 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-brand-400: oklch(0.707 0.165 254.624);
+    --color-brand-500: oklch(0.623 0.214 259.815);
+    --color-brand-600: oklch(0.546 0.245 262.881);
+}
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        scroll-behavior: smooth;
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    body {
+        @apply min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
+        background-image: radial-gradient(60rem 30rem at 50% -10rem, --alpha(var(--color-brand-500) / 8%), transparent);
+        background-repeat: no-repeat;
+    }
+
+    ::selection {
+        @apply bg-brand-500/25;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-brand-500;
+    }
+
+    a, button {
+        @apply transition-colors duration-150 ease-out;
+    }
+
+    button:not(:disabled), [role='button']:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
+@layer components {
+    /* Top navigation bar */
+    .site-nav {
+        @apply sticky top-0 z-40 border-b border-zinc-200/70 bg-white/75 backdrop-blur-md backdrop-saturate-150
+            dark:border-white/10 dark:bg-zinc-900/70;
+    }
+
+    .brand-link {
+        @apply bg-gradient-to-r from-brand-600 to-violet-500 bg-clip-text tracking-tight text-transparent
+            hover:opacity-80 dark:from-brand-400 dark:to-violet-400;
+    }
+
+    /* Icon-only nav links (desktop) */
+    .nav-icon {
+        @apply inline-flex items-center justify-center rounded-lg p-1.5 text-zinc-600
+            hover:bg-zinc-900/5 hover:text-brand-600
+            dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-brand-400;
+    }
+
+    /* Labeled nav links (mobile menu) */
+    .nav-item {
+        @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-700
+            hover:bg-zinc-900/5 hover:text-brand-600
+            dark:text-zinc-200 dark:hover:bg-white/10 dark:hover:text-brand-400;
+    }
+
+    .theme-toggle {
+        @apply inline-flex items-center justify-center rounded-full border border-zinc-200 bg-white p-2 text-zinc-700 shadow-sm
+            hover:bg-zinc-100 hover:text-zinc-900
+            dark:border-white/10 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white;
+    }
+
+    .user-chip {
+        @apply rounded-full bg-zinc-900/5 px-3 py-1 text-sm font-medium text-zinc-700 dark:bg-white/10 dark:text-zinc-200;
+    }
+
+    /* Flash messages */
+    .alert {
+        @apply mx-4 my-6 flex flex-col gap-0.5 rounded-xl border p-4 text-sm shadow-sm sm:mx-8;
+    }
+
+    .alert-success {
+        @apply border-emerald-200 bg-emerald-50 text-emerald-800
+            dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300;
+    }
+
+    .alert-error {
+        @apply border-red-200 bg-red-50 text-red-800
+            dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300;
+    }
+
+    /* Cards & forms */
+    .card {
+        @apply rounded-2xl border border-zinc-200/80 bg-white/90 p-8 shadow-xl shadow-zinc-900/5 backdrop-blur
+            dark:border-white/10 dark:bg-zinc-900/80 dark:shadow-black/30;
+    }
+
+    .form-label {
+        @apply mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300;
+    }
+
+    .form-input {
+        @apply block w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 shadow-sm
+            placeholder:text-zinc-400 transition
+            focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none
+            dark:border-white/10 dark:bg-zinc-800/80 dark:text-zinc-100 dark:placeholder:text-zinc-500
+            dark:focus:border-brand-400 dark:focus:ring-brand-400/20;
+    }
+
+    .form-input[aria-invalid='true'] {
+        @apply border-red-400 focus:border-red-500 focus:ring-red-500/15 dark:border-red-500/60;
+    }
+
+    .form-error {
+        @apply mt-1.5 text-xs text-red-600 dark:text-red-400;
+    }
+
+    .btn-primary {
+        @apply inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white
+            shadow-sm shadow-brand-600/30 hover:bg-brand-500 active:bg-brand-600 active:scale-[0.99]
+            focus-visible:outline-brand-500 dark:bg-brand-500 dark:hover:bg-brand-400;
+    }
+
+    .site-footer {
+        @apply mt-12 mb-8 text-center text-xs text-zinc-500 dark:text-zinc-400;
+    }
 }

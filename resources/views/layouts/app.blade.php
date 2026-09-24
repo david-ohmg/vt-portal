@@ -28,37 +28,40 @@
             })();
         </script>
 
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         @livewireStyles
     </head>
-    <body class="bg-white text-shadow-black dark:bg-zinc-900 dark:text-white dark:border-zinc-700">
-    <nav class="mb-2 px-4 py-2 text-slate-900 dark:text-gray-100 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700">
+    <body class="font-sans">
+    <nav class="site-nav mb-2 px-4 py-3">
         <!-- Desktop Nav -->
         <div class="flex justify-between items-center">
             <!-- Logo/Title -->
-            <div class="font-bold">
-                <a href="{{ route('portal.batches') }}" class="hover:text-blue-400 dark:hover:text-blue-300">OHMG Voice Talent Portal</a>
+            <div class="text-lg font-bold">
+                <a href="{{ route('portal.batches') }}" class="brand-link">OHMG Voice Talent Portal</a>
             </div>
 
             <!-- Mobile Menu Button -->
             <button
                 id="mobile-menu-button"
                 type="button"
-                class="md:hidden p-2 hover:text-blue-400 dark:hover:text-blue-300"
+                class="nav-icon md:hidden"
                 aria-label="Toggle menu">
                 <x-icon-menu />
             </button>
 
             <!-- Desktop Navigation -->
-            <div class="hidden md:flex gap-8 items-center">
+            <div class="hidden md:flex gap-4 items-center">
                 @if(auth()->user())
-                    <a href="{{ route('portal.batches') }}" title="View Open Batches" class="hover:text-blue-400 dark:hover:text-blue-300">
+                    <a href="{{ route('portal.batches') }}" title="View Open Batches" class="nav-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776" />
                         </svg>
                     </a>
-                    <a href="{{ route('portal.archive') }}" title="View Archived batches" class="hover:text-blue-400 dark:hover:text-blue-300">
+                    <a href="{{ route('portal.archive') }}" title="View Archived batches" class="nav-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                         </svg>
@@ -68,7 +71,7 @@
                 <button
                     type="button"
                     id="theme-toggle"
-                    class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold text-zinc-900 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+                    class="theme-toggle"
                     aria-label="Toggle dark mode"
                     title="Toggle theme">
                     <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
@@ -80,22 +83,22 @@
                 </button>
 
                 @if(auth()->user())
-                    <span>{{ auth()->user()->name }}</span>
-                    <a href="{{ route('portal.profile') }}" title="Profile" class="hover:text-blue-400 dark:hover:text-blue-300">
+                    <span class="user-chip">{{ auth()->user()->name }}</span>
+                    <a href="{{ route('portal.profile') }}" title="Profile" class="nav-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" title="Logout" class="hover:text-blue-400 dark:hover:text-blue-300">
+                        <button type="submit" title="Logout" class="nav-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
                             </svg>
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" title="Login" class="hover:text-blue-400 dark:hover:text-blue-300">
+                    <a href="{{ route('login') }}" title="Login" class="nav-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
                         </svg>
@@ -105,21 +108,21 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 flex flex-col gap-4">
+        <div id="mobile-menu" class="hidden md:hidden mt-3 pb-2 flex flex-col gap-1">
             @if(auth()->user())
-                <a href="{{ route('portal.batches') }}" class="flex items-center gap-2 hover:text-blue-400 dark:hover:text-blue-300">
+                <a href="{{ route('portal.batches') }}" class="nav-item w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                     </svg>
                     <span>My Batches</span>
                 </a>
-                <a href="{{ route('portal.archive') }}" class="flex items-center gap-2 hover:text-blue-400 dark:hover:text-blue-300">
+                <a href="{{ route('portal.archive') }}" class="nav-item w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                     </svg>
                     <span>Archive</span>
                 </a>
-                <a href="{{ route('portal.profile') }}" class="flex items-center gap-2 hover:text-blue-400 dark:hover:text-blue-300">
+                <a href="{{ route('portal.profile') }}" class="nav-item w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
@@ -127,7 +130,7 @@
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="flex items-center gap-2 hover:text-blue-400 dark:hover:text-blue-300">
+                    <button type="submit" class="nav-item w-full">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
                         </svg>
@@ -135,7 +138,7 @@
                     </button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="flex items-center gap-2 hover:text-blue-400 dark:hover:text-blue-300">
+                <a href="{{ route('login') }}" class="nav-item w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
                     </svg>
@@ -145,20 +148,20 @@
         </div>
     </nav>
     @if(session('success'))
-        <div role="alert" class="mx-8 my-8  border-l-4 border-green-500 bg-green-100 p-4 text-green-700 opacity-75">
-            <p class="font-bold">Success!</p>
+        <div role="alert" class="alert alert-success">
+            <p class="font-semibold">Success!</p>
             <p>{{ session('success') }}</p>
         </div>
     @endif
     @if(session('error'))
-        <div role="alert" class="mx-8 my-8  border-l-4 border-red-500 bg-red-100 p-4 text-red-700 opacity-75">
-            <p class="font-bold">Error</p>
+        <div role="alert" class="alert alert-error">
+            <p class="font-semibold">Error</p>
             <p>{{ session('error') }}</p>
         </div>
     @endif
     {{ $slot }}
-    <footer class="mb-8 mt-12 text-xs text-slate-900 dark:text-slate-200 text-center">
-        <span class="">&copy; {{ date('Y') }} On Hold Media Group</span>
+    <footer class="site-footer">
+        <span>&copy; {{ date('Y') }} On Hold Media Group</span>
     </footer>
         @livewireScripts
     </body>

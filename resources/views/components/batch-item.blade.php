@@ -24,7 +24,14 @@
             {{ Carbon\Carbon::parse($batch['date_entered'])->format('M j, Y') }}
         </div>
         <div class="flex-1">
-            {{ $type === 'aa' ? $batch['voice_talent_details'] : $batch['female_vt_details'] }}
+            @if($type === 'aa')
+                {{ $batch['voice_talent_details'] }}
+            @else
+                {{ $batch['female_vt_details'] }}
+                @if(!empty($batch['male_vt_details']))
+                    <br>{{ $batch['male_vt_details'] }}
+                @endif
+            @endif
         </div>
         <div class="flex-1">
             ({{ $batch['n_scripts'] }})

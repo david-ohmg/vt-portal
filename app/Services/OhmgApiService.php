@@ -20,9 +20,24 @@ class OhmgApiService
      */
     public function getBatches(?int $userId = null, ?bool $archive = false): array
     {
-        $params = ($userId && $userId > 0) ? ['female_vt' => $userId] : [];
         $path = $archive ? 'batches/archive/' : 'batches/batches/';
-        return $this->fetchFromEndpoint($path, $params);
+
+        if (!$userId || $userId <= 0) {
+            return $this->fetchFromEndpoint($path);
+        }
+
+        // The API ANDs female_vt/male_vt filters, so query each role separately and merge
+        $batches = collect($this->fetchFromEndpoint($path, ['female_vt' => $userId]))
+            ->merge($this->fetchFromEndpoint($path, ['male_vt' => $userId]))
+            ->unique('id')
+            ->sortByDesc('date_entered');
+
+        // Archive endpoint caps results at 30 per call
+        if ($archive) {
+            $batches = $batches->take(30);
+        }
+
+        return $batches->values()->all();
     }
 
     /**

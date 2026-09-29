@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Concerns\LoadsBatches;
 use App\Services\FileUploadService;
 use App\Services\OhmgApiService;
 use App\Services\UploadNotificationService;
@@ -11,7 +12,7 @@ use Livewire\WithFileUploads;
 
 new #[Title('Upload Files')]
 class extends Component {
-    use WithFileUploads;
+    use LoadsBatches, WithFileUploads;
 
     #[Validate('max:4096')] // 4MB Max
     public array $files = [];
@@ -49,7 +50,13 @@ class extends Component {
         $batchDetail = $apiService->getBatchDetail($batchRoute['type'], $batchRoute['batch_id']);
         $writerEmail = $batchDetail['writer_details'] ?? null;
 
-        $vtEmail = $batchRoute['type'] === 'aa' ? ($batchDetail['vt_email'] ?? null) : ($batchDetail['female_vt_email'] ?? null);
+        if ($batchRoute['type'] === 'aa') {
+            $vtEmail = $batchDetail['vt_email'] ?? null;
+        } else {
+            // Script batches have two VTs; notify whichever one uploaded
+            $isMaleVt = isset($batchDetail['male_vt']) && (int) $batchDetail['male_vt'] === (int) $this->getUserVtId();
+            $vtEmail = $isMaleVt ? ($batchDetail['male_vt_email'] ?? null) : ($batchDetail['female_vt_email'] ?? null);
+        }
 
         $customerName = $batchRoute['type'] === 'aa' ? ($batchDetail['customer_name'] ?? null) : ($batchDetail['category_details'] ?? null);
 

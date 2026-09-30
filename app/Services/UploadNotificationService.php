@@ -22,11 +22,19 @@ class UploadNotificationService
     {
         $body = $this->buildEmailBody($filePaths);
 
-        Mail::to($vtEmail)->cc($recipientEmail)->send(new PortalMail([
-            'subject' => "Files Uploaded for {$customerName} ({$batchId})",
-            'message' => $body,
-            'attachments' => $filePaths,
-        ]));
+        // A mail failure shouldn't stop the recorded writeback below
+        try {
+            Mail::to($vtEmail)->cc($recipientEmail)->send(new PortalMail([
+                'subject' => "Files Uploaded for {$customerName} ({$batchId})",
+                'message' => $body,
+                'attachments' => $filePaths,
+            ]));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send upload notification email', [
+                'batch_id' => $batchId,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         $this->notifyBatchRecorded($batchId);
     }

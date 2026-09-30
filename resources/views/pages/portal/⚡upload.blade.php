@@ -4,6 +4,7 @@ use App\Livewire\Concerns\LoadsBatches;
 use App\Services\FileUploadService;
 use App\Services\OhmgApiService;
 use App\Services\UploadNotificationService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
@@ -61,7 +62,15 @@ class extends Component {
         $customerName = $batchRoute['type'] === 'aa' ? ($batchDetail['customer_name'] ?? null) : ($batchDetail['category_details'] ?? null);
 
         if ($writerEmail) {
-            $notificationService->sendUploadNotification($writerEmail, $vtEmail, $customerName, $this->batchId, $uploadedPaths);
+            // Files are already stored and the batch updated, so a notification failure shouldn't fail the upload
+            try {
+                $notificationService->sendUploadNotification($writerEmail, $vtEmail, $customerName, $this->batchId, $uploadedPaths);
+            } catch (\Throwable $e) {
+                Log::error('Upload notification failed', [
+                    'batch_id' => $this->batchId,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         // Reset form and show success

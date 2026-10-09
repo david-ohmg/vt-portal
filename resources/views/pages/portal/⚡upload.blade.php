@@ -86,7 +86,7 @@ class extends Component {
 ?>
 
 <div>
-    <h1 class="text-2xl font-bold text-center mb-4 mt-4">Upload Audio ({{ $batchId }})</h1>
+    <h1 class="text-2xl font-bold text-center mb-4 mt-4">Upload Audio/Zip ({{ $batchId }})</h1>
 
     @if (session()->has('message'))
         <div class="text-center mx-8 my-8 border-l-4 border-green-500 bg-green-100 p-4 text-green-700 opacity-75">
@@ -99,13 +99,13 @@ class extends Component {
             <div class="w-full max-w-2xl">
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">
-                        Select Audio Files
+                        Select Audio or Zip Files
                     </label>
                     <input
                         type="file"
                         wire:model="files"
                         multiple
-                        accept="audio/*"
+                        accept="audio/*,.zip"
                         class="w-full rounded-md border border-dashed p-16 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer transition">
                     @error('files.*')
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
